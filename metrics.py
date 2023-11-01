@@ -19,6 +19,8 @@ from pypfopt import plotting
 
 DATA_DIR = (os.getcwd() + "/data/")
 PREDICTION_DIR = (os.getcwd() + "/predictions_new/")
+start_date = '2014-01-01'
+end_date = "2019-11-30"
 
 sample_index = pd.read_csv(
     DATA_DIR + 'AAPL.csv', index_col='Date', parse_dates=True)
@@ -40,6 +42,12 @@ def RF_predict(train, val, final_model):
   return pred[0]
 
 
+def get_all_symbols():
+    return [v.strip('.csv') for v in os.listdir(DATA_DIR)]
+
+
+def get_current_predictions():
+    return [v.strip('_predictions.csv') for v in os.listdir(PREDICTION_DIR)]
 
 def walk_forward_validate(data, perc, final_model):
   predictions = []
