@@ -13,4 +13,5 @@ statsmodels==0.13.5
 quantstats==0.0.62
 #pandas_profiling==3.6.6
 pyportfolioopt==1.5.5
+ipython==8.8.0
 
