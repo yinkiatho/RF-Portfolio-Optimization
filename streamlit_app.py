@@ -20,6 +20,12 @@ from HRP import HRP
 from NaivePortfolio import NaivePorfolio
 
 
+# Parameters
+start_month, start_year = None, None
+end_month, end_year = None, None
+d = None
+n = None
+
 st.set_page_config(
     page_title="Random Forest Stock Selection and Portfolio Optimisation",
     page_icon="🧊",
@@ -27,7 +33,29 @@ st.set_page_config(
 
 
 # Define the Streamlit app
-st.title("Stock Price Prediction App")
+st.title("Random Forest Stock Selection and Portfolio Optimisation")
+
+
+# Side Bar
+st.sidebar.header("Model Configuration")
+
+with st.sidebar:
+    # General Analysis 
+    
+    # Choose Date
+    start_date = st.date_input("Your birthday")
+    start_month, start_year = start_date.month, start_date.year
+    
+    # Choose Number of Stocks
+    n = st.slider("Number of Stocks", 25, 275, 25)
+    
+    # Choose Prediction Window
+    d = st.slider("Number of Historical Years", 1, 3, 1)
+    
+
+    
+    
+    
 
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
