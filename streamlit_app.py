@@ -187,9 +187,12 @@ code = """for ticker in tickers:
     final_df.to_csv(f"predictions_new/{ticker}_predictions.csv")
     
     print(f"Mean Absolute Error: {mean_absolute_error(y_actual, y_pred)}")"""
+    
+st.code(code, language='python')
 
     
 
+    
     
     
     
