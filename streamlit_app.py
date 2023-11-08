@@ -43,7 +43,9 @@ with st.sidebar:
     # General Analysis 
     
     # Choose Date
-    start_date = st.date_input("Your birthday")
+    start_date = st.date_input("Choose Prediction Date", min_value=datetime(2014, 1, 1), 
+                               max_value=datetime(2019, 11, 30), 
+                               value=datetime(2014, 1, 1))
     start_month, start_year = start_date.month, start_date.year
     
     # Choose Number of Stocks
@@ -51,6 +53,16 @@ with st.sidebar:
     
     # Choose Prediction Window
     d = st.slider("Number of Historical Years", 1, 3, 1)
+    
+    
+
+# General Writeup about Project
+st.header("Project Description", divider=True)
+
+# URL Link: https://www.tandfonline.com/doi/epdf/10.1080/1331677X.2021.1875865?needAccess=true
+st.text("This project is based on the paper: 'A novel stock selection and portfolio optimization model based on random forest and hierarchical risk parity' by Qian, Y., Zhang, Y., & Zhang, Y. (2021).")
+
+
     
 
     
