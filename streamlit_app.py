@@ -69,6 +69,125 @@ st.write("With the usage of an ensemble machine learning model, this project aim
         aiming to maximise Sharpe Ratio. \
         These weights are then used to construct a new portfolio as to which its performance is evaluated against the S&P 500 Index.")
 
+st.subheader("Model Architecture")
+st.write("Ensemble Machine Learning Model built with Random Forest Regressor and Multi-layer Perceptron regressor, stacked together with a Gradient Boosting Regressor.")
+st.write("Optimised using GridSearchCV and Walk Foward Validation")
+
+code = """for ticker in tickers:
+    
+    print(f"Ticker: {ticker}")
+
+    ticker_data = make_to_monthly(ticker)
+    ticker_data['Next Month Close'] = ticker_data['Close'].shift(-1)
+    ticker_data.dropna(inplace=True)
+    ticker_data['Next Month Returns'] = (ticker_data['Next Month Close'] - ticker_data['Close']) / \
+        ticker_data['Close']
+    #print(ticker_data.columns)
+    # print(ticker_data.head())
+    features = ticker_data[['Open', 'Close', 'Adj Close', 'Volume', 'Returns', 'High', 'Low',
+                            'Stock Momentum', 'Short Term Reversal', 'Long Term Reversal',
+                            'Total Returns', 'Market_Beta', 'Turnover Volatility',
+                            'Total Return Volatility', 'SMA_5', 'SMA_20', 'SMA_50', 'SMA_252',
+                            'adv20', 'VWAP', 'log_returns', 'volatility_30', 'volatility_60',
+                            'annual_volatility', 'RSI(2)', 'RSI(7)', 'RSI(14)', 'CCI(30)',
+                            'CCI(50)', 'CCI(100)', 'BBWidth', 'Williams']]
+
+    target = ticker_data['Next Month Returns']
+
+    train, test = train_test_split(ticker_data, 0.3)
+
+    X_train = train[:, :-1]  # input as columns
+    y_train = train[:, -1]  # output as rows
+
+    
+    # Building RF model
+    random_forest = RandomForestRegressor(
+        n_jobs=-1, random_state=123, oob_score=True, warm_start=True)
+    
+    param_grid = {
+        'n_estimators': [ 600, 700, 800, 900, 1000],
+        'max_depth': [10, 20,30, 40, 50, None],
+        'min_samples_leaf': [1, 2, 4, 75, 100, 125],
+        'criterion': ['absolute_error', 'squared_error', 'friedman_mse', 'poisson'],
+        'max_features': [None, 'sqrt', 'log2'],
+    }
+    
+    grid_search = GridSearchCV(estimator=random_forest,
+                              param_grid=param_grid, cv=5)
+    grid_search.fit(X_train, y_train)
+
+    print(f"Best Params: {grid_search.best_params_}")
+    rf_best_params = grid_search.best_params_
+   
+    # Build MLPRegressor
+    mlp = MLPRegressor(max_iter=100000000000000, random_state=123, warm_start=True)
+    
+    param_grid = {
+        'hidden_layer_sizes': [(50, 50), (100, 50, 25), (100, 100, 100), (200, 100, 50, 25), (200, 200, 200)],
+        'activation': ['relu', 'tanh', 'identity'],
+         'learning_rate': ['constant', 'adaptive'],
+        'alpha': [0.0001, 0.001, 0.01],
+    }
+    
+    grid_search = GridSearchCV(estimator=mlp, param_grid=param_grid, cv=5)
+    grid_search.fit(X_train, y_train)
+
+    print(f"Best Params: {grid_search.best_params_}")
+    
+    mlp_best_params = grid_search.best_params_
+    
+    base_models = [
+        ('rf', RandomForestRegressor(**rf_best_params)),
+        ('nn', MLPRegressor(**mlp_best_params))
+    ]
+    
+    # Grid Search for meta learner
+    param_grid = {
+        'final_estimator__n_estimators': [250, 225, 275, 200, 300, 175],
+        'final_estimator__learning_rate': [0.01, 0.05, 0.1, 0.2],
+        # Example parameter choices
+        'final_estimator__max_depth': [6, 5, 8, None]
+    }
+
+    grid_search = GridSearchCV(estimator=stack_model, param_grid=param_grid,
+                               cv=5, scoring='neg_mean_squared_error', n_jobs=-1)
+    grid_search.fit(X_train, y_train)
+    print(grid_search.best_params_)
+    meta_learner = grid_search.best_estimator_
+    
+    
+    final_stack_model = StackingRegressor(
+        estimators=base_models, final_estimator=meta_learner)
+        
+    # Walk Forward Validation
+    y_pred, y_actual = walk_forward_validate(ticker_data, 0.3, final_stack_model)
+
+    # Add the predictions to the dataframe only for the test data, avoid look ahead bias
+    ticker_data['Next Month Returns Predictions'] = np.nan
+    ticker_data.iloc[-len(test):,
+                     ticker_data.columns.get_loc('Next Month Returns Predictions')] = y_pred
+    ticker_data[['Next Month Returns', 'Next Month Returns Predictions']].plot(
+        figsize=(15, 5))
+
+    data = ticker_data[['Next Month Returns',
+                        'Next Month Returns Predictions']]
+    data.dropna(inplace=True)
+    data.index = pd.to_datetime(data.index)
+    # data.resample('M').prod().plot(figsize=(15, 5))
+
+
+    final_df = ticker_data[['Next Month Returns',
+                            'Next Month Returns Predictions']]
+    
+    final_df[['Next Month Returns', 'Next Month Returns Predictions']].plot(
+        figsize=(15, 5))
+    
+    final_df['Close'] = ticker_data['Close']
+    final_df.dropna(inplace=True)
+    final_df.to_csv(f"predictions_new/{ticker}_predictions.csv")
+    
+    print(f"Mean Absolute Error: {mean_absolute_error(y_actual, y_pred)}")"""
+
     
 
     
