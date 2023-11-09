@@ -26,6 +26,7 @@ end_month, end_year = None, None
 d = None
 n = None
 
+
 st.set_page_config(
     page_title="Random Forest Stock Selection and Portfolio Optimisation",
     page_icon="🧊",
@@ -66,13 +67,15 @@ st.text("Based on the paper: 'A novel stock selection and portfolio optimization
 st.write("With the usage of an ensemble machine learning model, this project aims to capture the non-linear relationships between stock features and stock returns. \
         Trained on historical data from 1999 to 2014, the model aims predict the returns of stocks in the next month. \
         Based on a desired number of stocks, the stocks with the highest predicted returns are then selected to be part of the portfolio.\n \
-        Comparison is made between portfolios optimised using the Hierarchical Risk Parity (HRP) algorithm, Naive Portfolio Diversification and Mean-Variance Optimisations Techniques, \
+        Comparison is made between portfolios optimised using the Hierarchical Risk Parity (HRP) algorithm, Naive Portfolio Diversification and Mean-Variance Optimisation Techniques, \
         aiming to maximise Sharpe Ratio. \
         These weights are then used to construct a new portfolio as to which its performance is evaluated against the S&P 500 Index.")
 
 st.subheader("Model Architecture")
 st.write("Ensemble Machine Learning Model built with Random Forest Regressor and Multi-layer Perceptron regressor, stacked together with a Gradient Boosting Regressor.")
-st.write("Optimised using GridSearchCV and Walk Foward Validation")
+st.write("Optimised using GridSearchCV and Walk Foward Validation Technique")
+
+st.image("model.drawio.png", use_column_width=True)
 
 with st.expander("Model Code"):
     code = """for ticker in tickers:
