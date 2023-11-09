@@ -71,6 +71,23 @@ st.write("With the usage of an ensemble machine learning model, this project aim
         aiming to maximise Sharpe Ratio. \
         These weights are then used to construct a new portfolio as to which its performance is evaluated against the S&P 500 Index.")
 
+st.subheader("Feature Engineering", divider=True)
+st.write("Engineered features: \
+        1. Simple Moving Average(5, 20, 50, 252) \
+        2. Short Term Reversal \
+        3. Long Term Reversal \
+        4. Stock Momentum \
+        5. Market Beta \
+        6. Turnover Volatility \
+        7. Total Return Volatility \
+        8. VWAP \
+        9. Log Returns \
+        10. Volatility(30, 60, 252) \
+        11. Relative Strength Index(2, 7, 14) \
+        12. Commodity Channel Index(30, 50, 100) \
+        13. Bollinger Bands Width \
+        14. Williams %R")
+
 st.subheader("Model Architecture")
 st.write("Ensemble Machine Learning Model built with Random Forest Regressor and Multi-layer Perceptron regressor, stacked together with a Gradient Boosting Regressor.")
 st.write("Optimised using GridSearchCV and Walk Foward Validation Technique")
@@ -194,8 +211,8 @@ with st.expander("Model Code"):
 
     
 
-       
-    
+
+
     
     
 
