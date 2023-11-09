@@ -75,7 +75,7 @@ st.subheader("Model Architecture")
 st.write("Ensemble Machine Learning Model built with Random Forest Regressor and Multi-layer Perceptron regressor, stacked together with a Gradient Boosting Regressor.")
 st.write("Optimised using GridSearchCV and Walk Foward Validation Technique")
 
-st.image("./Misc/model.drawio.png", use_column_width=True)
+st.image("./Misc/model.drawio.png", caption="Stacking Model Architecture", use_column_width="auto")
 
 with st.expander("Model Code"):
     code = """for ticker in tickers:
