@@ -278,7 +278,7 @@ with tab1:
     pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
     plt.title('Model Weights')
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.pyplot(fig)
+    st.pyplot(fig, width=300, height=300)
 
 
     st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
