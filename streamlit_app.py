@@ -286,7 +286,7 @@ with tab1:
     st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
     
     report = mvp.print_comparison_quantstats()
-    print(report)
+    st.write(report)
 
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
