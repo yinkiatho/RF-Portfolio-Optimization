@@ -214,13 +214,13 @@ tab1, tab2, tab3 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio", "Naive P
 
 with tab1:
     st.header(f"Mean Variance Optimized Portfolio with {n} Stocks", divider=True)
-    st.subheader("Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
+    st.write("Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
     
     mvp = MVP()
     results, best_model = mvp.generate_mv_models(start_month, start_year)
     
     # Plotting Graphs 2 columns
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     with col1:	
         d = [1, 2, 3]
         for i, result in enumerate(results['dfs']):
