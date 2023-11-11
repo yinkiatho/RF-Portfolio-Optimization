@@ -295,12 +295,12 @@ with tab1:
     #print(source_code)
     components.html(source_code)
     
-    with open('mv_report.html', 'r', encoding='utf-8') as file:
-        html_content = file.read()
+    #with open('mv_report.html', 'r', encoding='utf-8') as file:
+    #    html_content = file.read()
 
-    html_content += "*<style>{white-space:auto !important;}</style>"
+    #html_content += "*<style>{white-space:auto !important;}</style>"
     # Display the HTML content in Streamlit
-    st.markdown(html_content, unsafe_allow_html=True)
+    #st.markdown(html_content, unsafe_allow_html=True)
 
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
