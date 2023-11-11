@@ -29,6 +29,9 @@ end_month, end_year = None, None
 d = None
 n = None
 
+# Use default matplotlib font
+plt.rcParams['font.family'] = 'sans-serif'
+
 
 st.set_page_config(
     page_title="Random Forest Stock Selection and Portfolio Optimisation",
