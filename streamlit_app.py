@@ -210,11 +210,55 @@ with st.expander("Model Code"):
     st.code(code, language='python')
 
     
+tab1, tab2, tab3 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio", "Naive Portfolio"])
 
-
-
+with tab1:
+    st.header(f"Mean Variance Optimized Portfolio with {n} Stocks", divider=True)
+    st.subheader("Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
     
+    mvp = MVP()
+    results, best_model = mvp.generate_mv_models(start_month, start_year)
     
+    # Plotting Graphs 2 columns
+    col1, col2 = st.beta_columns(2)
+    with col1:	
+        d = [1, 2, 3]
+        for i, result in enumerate(results['dfs']):
+        #print(i, result)
+            plt.plot(result['num_stocks'], result['sharpes'])
+        plt.xlabel('Number of Stocks')
+        plt.ylabel('Sharpe Ratio')
+            #plt.legend(['d = ' + str(d[i])])
+        plt.title('MV: Sharpe Ratio vs Number of Stocks')
+        plt.legend(['d = 1', 'd = 2', 'd = 3'])
+        st.pyplot()
+        
+    with col2:
+        for i, result in enumerate(results['dfs']):
+        #print(i, result)
+            plt.plot(result['num_stocks'], result['expected_return'])
+        plt.xlabel('Number of Stocks')
+        plt.ylabel('Expected Return')
+        # plt.legend(['d = ' + str(d[i])])
+        plt.title('MV: Expected Return vs Number of Stocks')
+        plt.legend(['d = 1', 'd = 2', 'd = 3'])
+        st.pyplot()
+
+    st.write(f"Performance of best portfolio: {best_model.portfolio_performance(verbose=True)}")
+    
+    st.subheader("Portfolio Weights")
+
+    # Plot the pie chart    
+    fig, ax = plt.subplots(figsize=(10, 10))
+    pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
+    plt.title('Model Weights')
+    st.pyplot(fig)
+
+
+    st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
+    
+    report = mvp.print_comparison_quantstats()
+    print(report)
 
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables

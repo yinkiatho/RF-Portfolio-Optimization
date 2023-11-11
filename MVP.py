@@ -144,7 +144,7 @@ class MVP(BasePortfolio):
 
     
     
-    def generate_mv_models(self, start_month, start_year, end_month, end_year, d, n):
+    def generate_mv_models(self, start_month, start_year):
     
         curr_year, curr_month = start_year, start_month
         dfs = {
@@ -270,7 +270,7 @@ class MVP(BasePortfolio):
         optimized_portfolio = returns['Portfolio']
 
 
-        print(qs.reports.full(optimized_portfolio, benchmark=sp500))
+        #print(qs.reports.full(optimized_portfolio, benchmark=sp500))
         return qs.reports.full(optimized_portfolio, benchmark=sp500)
 
         
