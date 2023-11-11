@@ -298,6 +298,7 @@ with tab1:
     with open('mv_report.html', 'r', encoding='utf-8') as file:
         html_content = file.read()
 
+    html_content += "*<style>{white-space:auto !important;}</style>"
     # Display the HTML content in Streamlit
     st.markdown(html_content, unsafe_allow_html=True)
 
