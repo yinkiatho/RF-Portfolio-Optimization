@@ -218,12 +218,9 @@ with tab1:
     st.write("Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
     
     mvp = MVP()
+
     
-    #@st.cache
-    def generate_models(start_month, start_year):
-        return mvp.generate_mv_models(start_month, start_year)
-    
-    results, best_model = generate_models(start_month, start_year)
+    results, best_model = mvp.generate_mv_models(start_month, start_year)
     
     # Plotting Graphs 2 columns
     col1, col2 = st.columns(2)
