@@ -275,7 +275,7 @@ with tab1:
     st.subheader("Portfolio Weights")
 
     # Plot the pie chart    
-    fig, ax = plt.subplots(figsize=(1,1))
+    fig, ax = plt.subplots(figsize=(10,10))
     pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
     plt.title('Model Weights')
     plt.tight_layout()
@@ -288,7 +288,7 @@ with tab1:
     optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
     
-    st.write(qs.reports.full(optimized_portfolio, benchmark=sp500))
+    st.write(qs.reports.full(optimized_portfolio, benchmark=sp500, display=True))
 
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
