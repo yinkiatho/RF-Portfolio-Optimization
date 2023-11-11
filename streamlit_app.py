@@ -290,10 +290,16 @@ with tab1:
     st.subheader("Portfolio Performance")
     
     qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html')
-    HtmlFile = open("mv_report.html", 'r', encoding='utf-8')
-    source_code = HtmlFile.read() 
-    print(source_code)
-    components.html(source_code)
+    #HtmlFile = open("mv_report.html", 'r', encoding='utf-8')
+    #source_code = HtmlFile.read() 
+    #print(source_code)
+    #components.html(source_code)
+    
+    with open('mv_report.html', 'r', encoding='utf-8') as file:
+        html_content = file.read()
+
+    # Display the HTML content in Streamlit
+    st.markdown(html_content, unsafe_allow_html=True)
 
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
