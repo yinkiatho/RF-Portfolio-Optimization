@@ -293,7 +293,8 @@ with tab1:
     HtmlFile = open("mv_report.html", 'r', encoding='utf-8')
     source_code = HtmlFile.read() 
     #print(source_code)
-    components.html(source_code)
+    url = os.getcwd() + "/mv_report.html"
+    components.iframe(url, height=1000, scrolling=True)
     
     #with open('mv_report.html', 'r', encoding='utf-8') as file:
     #    html_content = file.read()
