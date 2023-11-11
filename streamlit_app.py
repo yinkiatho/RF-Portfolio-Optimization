@@ -219,7 +219,7 @@ with tab1:
     
     mvp = MVP()
     
-    @st.cache
+    #@st.cache
     def generate_models(start_month, start_year):
         return mvp.generate_mv_models(start_month, start_year)
     
