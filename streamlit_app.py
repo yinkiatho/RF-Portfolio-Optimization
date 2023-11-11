@@ -14,6 +14,7 @@ from keras.models import load_model
 from streamlit_extras.metric_cards import style_metric_cards
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+from streamlit_extras.metric_cards import style_metric_cards
 import matplotlib.pyplot as plt
 from MVP import MVP
 from HRP import HRP
@@ -36,7 +37,7 @@ st.set_page_config(
 
 # Define the Streamlit app
 st.title("Random Forest Stock Selection and Portfolio Optimisation")
-
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Side Bar
 st.sidebar.header("Model Configuration")
@@ -217,7 +218,12 @@ with tab1:
     st.write("Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
     
     mvp = MVP()
-    results, best_model = mvp.generate_mv_models(start_month, start_year)
+    
+    @st.cache
+    def generate_models(start_month, start_year):
+        return mvp.generate_mv_models(start_month, start_year)
+    
+    results, best_model = generate_models(start_month, start_year)
     
     # Plotting Graphs 2 columns
     col1, col2 = st.columns(2)
@@ -244,12 +250,34 @@ with tab1:
         plt.legend(['d = 1', 'd = 2', 'd = 3'])
         st.pyplot()
 
-    st.write(f"Performance of best portfolio: {best_model.portfolio_performance(verbose=True)}")
-    
+
+    expected_ar, annual_volatility, sharpe = best_model.portfolio_performance(verbose=True)
+    kpi1, kpi2, kpi3 = st.columns(3)
+
+        # fill in those three columns with respective metrics or KPIs
+    kpi1.metric(
+            label="Expected Annual Return %",
+            value=round(expected_ar*100, 2),
+        )
+
+    kpi2.metric(
+            label="Annual Volatility %",
+            value=round(annual_volatility*100, 2),
+            # delta=-10 + count_married,
+        )
+
+    kpi3.metric(
+            label="Sharpe Ratio",
+            value=round(sharpe, 2),
+        )
+
+
+    style_metric_cards()
+    st.write("")
     st.subheader("Portfolio Weights")
 
     # Plot the pie chart    
-    fig, ax = plt.subplots(figsize=(10, 10))
+    fig, ax = plt.subplots(figsize=(5,5))
     pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
     plt.title('Model Weights')
     st.pyplot(fig)
