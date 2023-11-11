@@ -304,7 +304,7 @@ with tab1:
 
     #html_content += "*<style>{white-space:auto !important;}</style>"
     #Display the HTML content in Streamlit
-    st.link_button("Portfolio Report", url={os.getcwd() + "/mv_report.html"})
+    st.link_button("Portfolio Report", url=os.getcwd() + "/mv_report.html")
     st.markdown(html_content, unsafe_allow_html=True)
 
 
