@@ -274,9 +274,10 @@ with tab1:
     st.subheader("Portfolio Weights")
 
     # Plot the pie chart    
-    fig, ax = plt.subplots(figsize=(5,5))
+    fig, ax = plt.subplots(figsize=(1,1))
     pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
     plt.title('Model Weights')
+    st.set_option('deprecation.showPyplotGlobalUse', False)
     st.pyplot(fig)
 
 
