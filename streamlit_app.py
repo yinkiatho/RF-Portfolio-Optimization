@@ -1,6 +1,7 @@
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+import streamlit.components.v1 as components
 from datetime import datetime
 import os
 import streamlit as st
@@ -288,7 +289,11 @@ with tab1:
     optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
     
-    st.write(qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html'))
+    qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html')
+    HtmlFile = open("mv_report.html", 'r', encoding='utf-8')
+    source_code = HtmlFile.read() 
+    print(source_code)
+    components.html(source_code)
 
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
