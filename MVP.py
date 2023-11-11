@@ -272,6 +272,36 @@ class MVP(BasePortfolio):
 
         #print(qs.reports.full(optimized_portfolio, benchmark=sp500))
         return qs.reports.full(optimized_portfolio, benchmark=sp500)
+    
+    def get_quantstats(self):
+        weights = self.best_model.clean_weights()
+        # For each stock, get the weights, get daily historical return from 2014-2018
+        # Get SP500 Benchmark
+        sp500 = pd.read_csv(DATA_DIR + 'GSPC.csv', index_col='Date', parse_dates=True)
+        mask = (sp500.index >= datetime(2014, 1, 1)) & (sp500.index <= datetime(2019, 12, 31))
+        sp500 = sp500.loc[mask]
+        sp500 = sp500['Close']
+        sp500 = sp500.pct_change().dropna()
+        #print(sp500)
+
+        returns = pd.DataFrame()
+        for ticker, weight in weights.items():
+    
+            # Get historical data for each stock
+            if weight == 0:
+                continue
+            data = pd.read_csv(DATA_DIR + ticker + '.csv',
+                                   index_col='Date', parse_dates=True)
+            mask = (data.index >= datetime(2014, 1, 1)) & (data.index <= datetime(2019, 11, 30))
+            data = data.loc[mask]
+            data = data['Close']
+            data = data.pct_change().dropna()
+            returns[ticker] = data * weight
+
+        returns['Portfolio'] = returns.sum(axis=1)
+        optimized_portfolio = returns['Portfolio']
+        
+        return optimized_portfolio, sp500
 
         
     

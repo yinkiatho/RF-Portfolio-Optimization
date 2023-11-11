@@ -7,6 +7,7 @@ import streamlit as st
 import pandas_ta as ta
 import pandas as pd
 # import pandas_profiling
+import quantstats as qs
 import numpy as np
 from math import sqrt
 from keras.models import load_model
@@ -283,8 +284,10 @@ with tab1:
 
     st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
     
-    report = mvp.print_comparison_quantstats()
-    st.write(report)
+    optimized_portfolio, sp500 = mvp.get_quantstats()
+    st.subheader("Portfolio Performance")
+    
+    st.write(qs.reports.full(optimized_portfolio, benchmark=sp500))
 
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
