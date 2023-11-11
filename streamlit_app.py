@@ -288,7 +288,7 @@ with tab1:
     optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
     
-    st.write(qs.reports.html(optimized_portfolio, benchmark=sp500, output='dict'))
+    st.write(qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html'))
 
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
