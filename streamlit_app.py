@@ -226,37 +226,37 @@ with tab1:
     
     st.image("./Misc/mv_stats.png", caption="Mean Variance Portfolio Performance", use_column_width="auto")
 
-    '''
-    results, best_model = mvp.generate_mv_models(start_month, start_year)
+    
+    #results, best_model = mvp.generate_mv_models(start_month, start_year)
     
     # Plotting Graphs 2 columns
-    col1, col2 = st.columns(2)
-    with col1:	
-        d = [1, 2, 3]
-        for i, result in enumerate(results['dfs']):
-        #print(i, result)
-            plt.plot(result['num_stocks'], result['sharpes'])
-        plt.xlabel('Number of Stocks')
-        plt.ylabel('Sharpe Ratio')
-            #plt.legend(['d = ' + str(d[i])])
-        plt.title('MV: Sharpe Ratio vs Number of Stocks')
-        plt.legend(['d = 1', 'd = 2', 'd = 3'])
-        st.pyplot()
+    #col1, col2 = st.columns(2)
+    #with col1:	
+    #    d = [1, 2, 3]
+    #    for i, result in enumerate(results['dfs']):
+    #    #print(i, result)
+    #        plt.plot(result['num_stocks'], result['sharpes'])
+    #    plt.xlabel('Number of Stocks')
+    #    plt.ylabel('Sharpe Ratio')
+    #        #plt.legend(['d = ' + str(d[i])])
+    #    plt.title('MV: Sharpe Ratio vs Number of Stocks')
+    #    plt.legend(['d = 1', 'd = 2', 'd = 3'])
+    #    st.pyplot()
         
-    with col2:
-        for i, result in enumerate(results['dfs']):
-        #print(i, result)
-            plt.plot(result['num_stocks'], result['expected_return'])
-        plt.xlabel('Number of Stocks')
-        plt.ylabel('Expected Return')
-        # plt.legend(['d = ' + str(d[i])])
-        plt.title('MV: Expected Return vs Number of Stocks')
-        plt.legend(['d = 1', 'd = 2', 'd = 3'])
-        st.pyplot()
+    #with col2:
+    #    for i, result in enumerate(results['dfs']):
+    #    #print(i, result)
+    #        plt.plot(result['num_stocks'], result['expected_return'])
+    #    plt.xlabel('Number of Stocks')
+    #    plt.ylabel('Expected Return')
+    #    # plt.legend(['d = ' + str(d[i])])
+    #    plt.title('MV: Expected Return vs Number of Stocks')
+    #    plt.legend(['d = 1', 'd = 2', 'd = 3'])
+    #   st.pyplot()
 
 
-    expected_ar, annual_volatility, sharpe = best_model.portfolio_performance(verbose=True)
-    '''
+    #expected_ar, annual_volatility, sharpe = best_model.portfolio_performance(verbose=True)
+   
     kpi1, kpi2, kpi3 = st.columns(3)
 
         # fill in those three columns with respective metrics or KPIs
@@ -283,14 +283,14 @@ with tab1:
 
     # Plot the pie chart   
     st.image("./Misc/mv_weights.png", caption="Model Weights", use_column_width="auto")
-    '''
-    fig, ax = plt.subplots(figsize=(8,8))
-    pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
-    plt.title('Model Weights')
-    plt.tight_layout()
-    st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.pyplot(fig)
-    '''
+    
+    #fig, ax = plt.subplots(figsize=(8,8))
+    #pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
+    #plt.title('Model Weights')
+    #plt.tight_layout()
+    #st.set_option('deprecation.showPyplotGlobalUse', False)
+    #st.pyplot(fig)
+    
 
     st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
     
