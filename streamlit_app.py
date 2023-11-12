@@ -298,11 +298,10 @@ with tab1:
     st.subheader("Portfolio Performance")
     
     #qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html')
-    #HtmlFile = open("mv_report.html", 'r', encoding='utf-8')
-    #source_code = HtmlFile.read() 
+    HtmlFile = open("stats.html", 'r', encoding='utf-8')
+    source_code = HtmlFile.read() 
     #print(source_code)
-    #url = os.getcwd() + "/mv_report.html"
-    #components.iframe(url)
+    components.html(source_code)
     #print(url)
     with open('mv_report.html', 'r', encoding='utf-8') as file:
         html_content = file.read()
