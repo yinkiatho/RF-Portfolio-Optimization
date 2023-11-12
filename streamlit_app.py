@@ -302,7 +302,6 @@ with tab1:
     #optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
     
-    
     pdf_file_path = "./Misc/stats.pdf"
     # get pdf file
     with open(pdf_file_path, "rb") as file:
@@ -316,7 +315,7 @@ with tab1:
 
 
 with tab2:
-    with open('mv_report.html', 'r', encoding='utf-8') as file:
+    with open('./Misc/stats.html', 'r', encoding='utf-8') as file:
         html_content = file.read()
 
     #html_content += "*<style>{white-space:auto !important;}</style>"
