@@ -296,6 +296,7 @@ with tab1:
     
     #optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
+    st.link_button("Portfolio Report", url="mv_report.html")
     
     #qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html')
     HtmlFile = open("stats.html", 'r', encoding='utf-8')
@@ -303,13 +304,10 @@ with tab1:
     #print(source_code)
     components.html(source_code)
     #print(url)
-    with open('mv_report.html', 'r', encoding='utf-8') as file:
-        html_content = file.read()
 
     #html_content += "*<style>{white-space:auto !important;}</style>"
     #Display the HTML content in Streamlit
-    st.link_button("Portfolio Report", url="mv_report.html")
-    st.markdown(html_content, unsafe_allow_html=True)
+    
 
 
 with tab2:
