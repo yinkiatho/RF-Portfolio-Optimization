@@ -315,12 +315,85 @@ with tab1:
 
 
 with tab2:
-    with open('./Misc/stats.html', 'r', encoding='utf-8') as file:
-        html_content = file.read()
+    st.header(f"Hierarchical Risk Parity Optimized Portfolio", divider=True)
+    st.write("HRP Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
+    
+    hrp = HRP()
+    
+    #st.image("./Misc/mv_stats.png", caption="Mean Variance Portfolio Performance", use_column_width="auto")
 
-    #html_content += "*<style>{white-space:auto !important;}</style>"
-    #Display the HTML content in Streamlit
-    st.markdown(html_content, unsafe_allow_html=True)
+    
+    results, best_model = hrp.generate_mv_models(start_month, start_year)
+    
+    # Plotting Graphs 2 columns
+    col1, col2 = st.columns(2)
+    with col1:	
+        d = [1, 2, 3]
+        for i, result in enumerate(results['dfs']):
+        #print(i, result)
+            plt.plot(result['num_stocks'], result['sharpes'])
+        plt.xlabel('Number of Stocks')
+        plt.ylabel('Sharpe Ratio')
+            #plt.legend(['d = ' + str(d[i])])
+        plt.title('MV: Sharpe Ratio vs Number of Stocks')
+        plt.legend(['d = 1', 'd = 2', 'd = 3'])
+        st.pyplot()
+        
+    with col2:
+        for i, result in enumerate(results['dfs']):
+        #print(i, result)
+            plt.plot(result['num_stocks'], result['expected_return'])
+        plt.xlabel('Number of Stocks')
+        plt.ylabel('Expected Return')
+        # plt.legend(['d = ' + str(d[i])])
+        plt.title('MV: Expected Return vs Number of Stocks')
+        plt.legend(['d = 1', 'd = 2', 'd = 3'])
+        st.pyplot()
+
+
+    expected_ar, annual_volatility, sharpe = best_model.portfolio_performance(verbose=True)
+   
+    kpi1, kpi2, kpi3 = st.columns(3)
+
+        # fill in those three columns with respective metrics or KPIs
+    kpi1.metric(
+            label="Expected Annual Return %",
+            value=round(expected_ar*100, 2),
+        )
+
+    kpi2.metric(
+            label="Annual Volatility %",
+            value=round(annual_volatility*100, 2)
+            # delta=-10 + count_married,
+        )
+
+    kpi3.metric(
+            label="Sharpe Ratio",
+            value=round(sharpe, 2)
+        )
+
+
+    style_metric_cards()
+    st.write("")
+    st.subheader("Portfolio Weights")
+
+    # Plot the pie chart   
+    #st.image("./Misc/mv_weights.png", caption="Model Weights", use_column_width="auto")
+    
+    fig, ax = plt.subplots(figsize=(8,8))
+    pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
+    plt.title('Model Weights')
+    plt.tight_layout()
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    st.pyplot(fig)
+    
+
+    st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
+    
+    #optimized_portfolio, sp500 = mvp.get_quantstats()
+    
+    st.subheader("Portfolio Performance")
+    
     
 with tab3:
     md_filepath = "./Misc/stats.md"
