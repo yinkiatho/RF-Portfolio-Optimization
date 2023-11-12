@@ -25,7 +25,7 @@ class HRP(BasePortfolio):
         self.results = None
         
         
-    def generate_hrp_models(self, start_month, start_year, end_month, end_year, d, n):
+    def generate_hrp_models(self, start_month, start_year):
 
         curr_year, curr_month = start_year, start_month
         dfs = {

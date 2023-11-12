@@ -323,7 +323,7 @@ with tab2:
     #st.image("./Misc/mv_stats.png", caption="Mean Variance Portfolio Performance", use_column_width="auto")
 
     
-    results, best_model = hrp.generate_mv_models(start_month, start_year)
+    results, best_model = hrp.generate_hrp_models(start_month, start_year)
     
     # Plotting Graphs 2 columns
     col1, col2 = st.columns(2)
