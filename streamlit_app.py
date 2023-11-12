@@ -320,38 +320,38 @@ with tab2:
     
     hrp = HRP()
     
-    #st.image("./Misc/mv_stats.png", caption="Mean Variance Portfolio Performance", use_column_width="auto")
+    st.image("./Misc/hrp_stats.png", caption="Hierarchical Risk Parity Portfolio Performance", use_column_width="auto")
 
     
-    results, best_model = hrp.generate_hrp_models(start_month, start_year)
+    #results, best_model = hrp.generate_hrp_models(start_month, start_year)
     
     # Plotting Graphs 2 columns
-    col1, col2 = st.columns(2)
-    with col1:	
-        d = [1, 2, 3]
-        for i, result in enumerate(results['dfs']):
-        #print(i, result)
-            plt.plot(result['num_stocks'], result['sharpes'])
-        plt.xlabel('Number of Stocks')
-        plt.ylabel('Sharpe Ratio')
-            #plt.legend(['d = ' + str(d[i])])
-        plt.title('HRP: Sharpe Ratio vs Number of Stocks')
-        plt.legend(['d = 1', 'd = 2', 'd = 3'])
-        st.pyplot()
+    #col1, col2 = st.columns(2)
+    #with col1:	
+    #    d = [1, 2, 3]
+    #    for i, result in enumerate(results['dfs']):
+    #    #print(i, result)
+    #        plt.plot(result['num_stocks'], result['sharpes'])
+    #    plt.xlabel('Number of Stocks')
+    #    plt.ylabel('Sharpe Ratio')
+    #        #plt.legend(['d = ' + str(d[i])])
+    #    plt.title('HRP: Sharpe Ratio vs Number of Stocks')
+    #    plt.legend(['d = 1', 'd = 2', 'd = 3'])
+    #    st.pyplot()
         
-    with col2:
-        for i, result in enumerate(results['dfs']):
-        #print(i, result)
-            plt.plot(result['num_stocks'], result['expected_return'])
-        plt.xlabel('Number of Stocks')
-        plt.ylabel('Expected Return')
-        # plt.legend(['d = ' + str(d[i])])
-        plt.title('HRP: Expected Return vs Number of Stocks')
-        plt.legend(['d = 1', 'd = 2', 'd = 3'])
-        st.pyplot()
+    #with col2:
+    #    for i, result in enumerate(results['dfs']):
+    #    #print(i, result)
+    #        plt.plot(result['num_stocks'], result['expected_return'])
+    #    plt.xlabel('Number of Stocks')
+    #    plt.ylabel('Expected Return')
+    #    # plt.legend(['d = ' + str(d[i])])
+    #    plt.title('HRP: Expected Return vs Number of Stocks')
+    #    plt.legend(['d = 1', 'd = 2', 'd = 3'])
+    #    st.pyplot()
 
 
-    expected_ar, annual_volatility, sharpe = best_model.portfolio_performance(verbose=True)
+    #expected_ar, annual_volatility, sharpe = best_model.portfolio_performance(verbose=True)
    
     kpi1, kpi2, kpi3 = st.columns(3)
 
