@@ -50,7 +50,7 @@ class HRP(BasePortfolio):
                     curr_year, curr_month, d, tickers)
                 rets = expected_returns.returns_from_prices(close_data)
 
-                hrp = hierarchical_portfolio.HRPOpt(predicted_returns)
+                hrp = hierarchical_portfolio.HRPOpt(rets)
                 # hrp.add_objective(objective_functions.L2_reg, gamma=0.1)
                 raw_weights = hrp.optimize()
                 cleaned_weights = hrp.clean_weights()
