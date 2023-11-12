@@ -303,10 +303,10 @@ with tab1:
     st.subheader("Portfolio Performance")
     
     
-
+    pdf_file_path = "./Misc/stats.pdf"
     # get pdf file
-    pdf_file = open("stats.pdf", "rb")
-    base64_pdf = base64.b64encode(pdf_file.read()).decode("utf-8")
+    with open(pdf_file_path, "rb") as file:
+        base64_pdf = base64.b64encode(file.read()).decode("utf-8")
 
     pdf_display = (
         f'<embed src="data:application/pdf;base64,{base64_pdf}" '
