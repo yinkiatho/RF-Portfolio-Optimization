@@ -78,7 +78,7 @@ st.text("Based on the paper: 'A novel stock selection and portfolio optimization
 st.write("With the usage of an ensemble machine learning model, this project aims to capture the non-linear relationships between stock features and stock returns. \
         Trained on historical data from 1999 to 2014, the model aims predict the returns of stocks in the next month. \
         Based on a desired number of stocks, the stocks with the highest predicted returns are then selected to be part of the portfolio.\n \
-        Comparison is made between portfolios optimised using the Hierarchical Risk Parity (HRP) algorithm, Naive Portfolio Diversification and Mean-Variance Optimisation Techniques, \
+        Comparison is made between portfolios optimised using the Hierarchical Risk Parity (HRP) algorithm and Mean-Variance Optimisation Techniques, \
         aiming to maximise Sharpe Ratio. \
         These weights are then used to construct a new portfolio as to which its performance is evaluated against the S&P 500 Index.")
 
@@ -221,7 +221,7 @@ with st.expander("Model Code"):
     st.code(code, language='python')
 
     
-tab1, tab2, tab3 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio", "Naive Portfolio"])
+tab1, tab2 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio"])
 
 with tab1:
     st.header(f"Mean Variance Optimized Portfolio with {n} Stocks", divider=True)
@@ -398,9 +398,6 @@ with tab2:
     st.subheader("Portfolio Performance")
     
     
-with tab3:
-    st.header(f"Naive Portfolio", divider=True)
-    st.write("Naive Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
     
 
     # Calculate profits or any other relevant metrics here
