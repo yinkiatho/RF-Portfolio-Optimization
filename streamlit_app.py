@@ -12,6 +12,7 @@ import quantstats as qs
 import numpy as np
 from math import sqrt
 from keras.models import load_model
+import base64
 # from streamlit_pandas_profiling import st_profile_report
 from streamlit_extras.metric_cards import style_metric_cards
 from plotly.subplots import make_subplots
@@ -301,18 +302,17 @@ with tab1:
     #optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
     
-    path = "file:///" + os.path.abspath('stats.html')
-    st.link_button("Performance Report", url=path)
     
-    #qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html')
-    HtmlFile = open("stats.html", 'r', encoding='utf-8')
-    source_code = HtmlFile.read() 
-    #print(source_code)
-    components.html(source_code)    
-    #print(url)
 
-    #html_content += "*<style>{white-space:auto !important;}</style>"
-    #Display the HTML content in Streamlit
+    # get pdf file
+    pdf_file = open("stats.pdf", "rb")
+    base64_pdf = base64.b64encode(pdf_file.read()).decode("utf-8")
+
+    pdf_display = (
+        f'<embed src="data:application/pdf;base64,{base64_pdf}" '
+        'width="800" height="1000" type="application/pdf"></embed>'
+    )
+    st.markdown(pdf_display, unsafe_allow_html=True)
     
 
 
