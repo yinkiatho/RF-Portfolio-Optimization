@@ -321,6 +321,12 @@ with tab2:
     #html_content += "*<style>{white-space:auto !important;}</style>"
     #Display the HTML content in Streamlit
     st.markdown(html_content, unsafe_allow_html=True)
+    
+with tab3:
+    pdf_file_path = "./Misc/stats.pdf"
+
+# Display a link to the PDF file
+    st.markdown(f"[Open PDF File]({pdf_file_path})", unsafe_allow_html=True)
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
 
