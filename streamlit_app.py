@@ -325,8 +325,8 @@ with tab2:
 with tab3:
     pdf_file_path = "./Misc/stats.pdf"
 
-# Display a link to the PDF file
-    st.markdown(f"[Open PDF File]({pdf_file_path})", unsafe_allow_html=True)
+# Create a download link for the PDF file
+    st.markdown(f'<a href="{pdf_file_path}" download="downloaded_file.pdf">Download PDF File</a>', unsafe_allow_html=True)
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
 
