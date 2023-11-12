@@ -21,13 +21,17 @@ import matplotlib.pyplot as plt
 from MVP import MVP
 from HRP import HRP
 from NaivePortfolio import NaivePorfolio
-print(os.getcwd())
-
+import webbrowser
 # Parameters
 start_month, start_year = None, None
 end_month, end_year = None, None
 d = None
 n = None
+
+
+def open_html_file(file_path):
+    # Open the HTML file in the default web browser
+    webbrowser.open(file_path)
 
 # Use default matplotlib font
 plt.rcParams['font.family'] = 'sans-serif'
@@ -296,13 +300,13 @@ with tab1:
     
     #optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
-    st.link_button("Portfolio Report", url="mv_report.html")
-    
+    if st.button("Performance Report"):
+        open_html_file("stats.html")    
     #qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html')
     HtmlFile = open("stats.html", 'r', encoding='utf-8')
     source_code = HtmlFile.read() 
     #print(source_code)
-    components.html(source_code)
+    components.html(source_code)    
     #print(url)
 
     #html_content += "*<style>{white-space:auto !important;}</style>"
