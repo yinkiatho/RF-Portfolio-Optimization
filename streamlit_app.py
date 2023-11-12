@@ -223,8 +223,10 @@ with tab1:
     st.write("Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
     
     mvp = MVP()
-
     
+    st.image("./Misc/mv_stats.png", caption="Mean Variance Portfolio Performance", use_column_width="auto")
+
+    '''
     results, best_model = mvp.generate_mv_models(start_month, start_year)
     
     # Plotting Graphs 2 columns
@@ -254,23 +256,24 @@ with tab1:
 
 
     expected_ar, annual_volatility, sharpe = best_model.portfolio_performance(verbose=True)
+    '''
     kpi1, kpi2, kpi3 = st.columns(3)
 
         # fill in those three columns with respective metrics or KPIs
     kpi1.metric(
             label="Expected Annual Return %",
-            value=round(expected_ar*100, 2),
+            value=15.41,
         )
 
     kpi2.metric(
             label="Annual Volatility %",
-            value=round(annual_volatility*100, 2),
+            value=12.42,
             # delta=-10 + count_married,
         )
 
     kpi3.metric(
             label="Sharpe Ratio",
-            value=round(sharpe, 2),
+            value=1.08,
         )
 
 
@@ -278,21 +281,23 @@ with tab1:
     st.write("")
     st.subheader("Portfolio Weights")
 
-    # Plot the pie chart    
+    # Plot the pie chart   
+    st.image("./Misc/mv_weights.png", caption="Model Weights", use_column_width="auto")
+    '''
     fig, ax = plt.subplots(figsize=(8,8))
     pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
     plt.title('Model Weights')
     plt.tight_layout()
     st.set_option('deprecation.showPyplotGlobalUse', False)
     st.pyplot(fig)
-
+    '''
 
     st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
     
-    optimized_portfolio, sp500 = mvp.get_quantstats()
+    #optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
     
-    qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html')
+    #qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html')
     #HtmlFile = open("mv_report.html", 'r', encoding='utf-8')
     #source_code = HtmlFile.read() 
     #print(source_code)
@@ -304,7 +309,7 @@ with tab1:
 
     #html_content += "*<style>{white-space:auto !important;}</style>"
     #Display the HTML content in Streamlit
-    st.link_button("Portfolio Report", url=os.getcwd() + "/mv_report.html")
+    st.link_button("Portfolio Report", url="mv_report.html")
     st.markdown(html_content, unsafe_allow_html=True)
 
 
