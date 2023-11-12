@@ -44,9 +44,9 @@ class HRP(BasePortfolio):
             }
         # while not (curr_year > end_year or (curr_year == end_year and curr_month > end_month)):
             for i in range(25, 275, 25):
-                tickers, pred_vector = super.get_top_n_tickers(curr_year, curr_month, i)
-                close_data = super.get_close_prices(curr_year, curr_month, d, tickers)
-                predicted_returns = super.generate_predicted_historical_returns(
+                tickers, pred_vector = super().get_top_n_tickers(curr_year, curr_month, i)
+                close_data = super().get_close_prices(curr_year, curr_month, d, tickers)
+                predicted_returns = super().generate_predicted_historical_returns(
                     curr_year, curr_month, d, tickers)
                 rets = expected_returns.returns_from_prices(close_data)
 
