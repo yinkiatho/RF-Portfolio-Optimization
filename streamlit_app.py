@@ -307,7 +307,7 @@ with tab1:
     with open(pdf_file_path, "rb") as file:
         bytes_data = file.read()
         base64_pdf = base64.b64encode(bytes_data).decode('utf-8')
-        pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="100" type="application/pdf"></iframe>'
+        pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="1000" type="application/pdf"></iframe>'
 
     
     st.markdown(pdf_display, unsafe_allow_html=True)
