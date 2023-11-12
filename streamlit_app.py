@@ -306,7 +306,9 @@ with tab1:
     pdf_file_path = "./Misc/stats.pdf"
     # get pdf file
     with open(pdf_file_path, "rb") as file:
-        pdf_display = file.read()
+        bytes_data = file.getvalue()
+        base64_pdf = base64.b64encode(bytes_data).decode('utf-8')
+        pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="100" type="application/pdf"></iframe>'
 
     
     st.markdown(pdf_display, unsafe_allow_html=True)
