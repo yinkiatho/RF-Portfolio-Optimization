@@ -324,7 +324,9 @@ with tab2:
     
 with tab3:
     md_filepath = "./Misc/stats.md"
-    st.markdown(md_filepath, unsafe_allow_html=True)
+    with open (md_filepath, "r") as file:
+        md = file.read()
+    st.markdown(md, unsafe_allow_html=True)
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
 
