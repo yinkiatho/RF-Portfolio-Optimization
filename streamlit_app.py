@@ -1,7 +1,5 @@
-from sklearn.metrics import mean_squared_error
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
 import streamlit.components.v1 as components
+from jinja2 import Template
 from datetime import datetime
 import os
 import streamlit as st
@@ -10,8 +8,6 @@ import pandas as pd
 # import pandas_profiling
 import quantstats as qs
 import numpy as np
-from math import sqrt
-from keras.models import load_model
 import base64
 # from streamlit_pandas_profiling import st_profile_report
 from streamlit_extras.metric_cards import style_metric_cards
@@ -33,6 +29,10 @@ n = None
 def open_html_file(file_path):
     # Open the HTML file in the default web browser
     webbrowser.open(file_path)
+    
+    
+    
+
 
 # Use default matplotlib font
 plt.rcParams['font.family'] = 'sans-serif'
@@ -335,7 +335,7 @@ with tab2:
         plt.xlabel('Number of Stocks')
         plt.ylabel('Sharpe Ratio')
             #plt.legend(['d = ' + str(d[i])])
-        plt.title('MV: Sharpe Ratio vs Number of Stocks')
+        plt.title('HRP: Sharpe Ratio vs Number of Stocks')
         plt.legend(['d = 1', 'd = 2', 'd = 3'])
         st.pyplot()
         
@@ -346,7 +346,7 @@ with tab2:
         plt.xlabel('Number of Stocks')
         plt.ylabel('Expected Return')
         # plt.legend(['d = ' + str(d[i])])
-        plt.title('MV: Expected Return vs Number of Stocks')
+        plt.title('HRP: Expected Return vs Number of Stocks')
         plt.legend(['d = 1', 'd = 2', 'd = 3'])
         st.pyplot()
 
@@ -358,18 +358,21 @@ with tab2:
         # fill in those three columns with respective metrics or KPIs
     kpi1.metric(
             label="Expected Annual Return %",
-            value=round(expected_ar*100, 2),
+            #value=round(expected_ar*100, 2),
+            value = 33.2
         )
 
     kpi2.metric(
             label="Annual Volatility %",
-            value=round(annual_volatility*100, 2)
+            #value=round(annual_volatility*100, 2)
+            value = 11.88
             # delta=-10 + count_married,
         )
 
     kpi3.metric(
             label="Sharpe Ratio",
-            value=round(sharpe, 2)
+            #value=round(sharpe, 2)
+            value = 2.62
         )
 
 
@@ -378,14 +381,14 @@ with tab2:
     st.subheader("Portfolio Weights")
 
     # Plot the pie chart   
-    #st.image("./Misc/mv_weights.png", caption="Model Weights", use_column_width="auto")
+    st.image("./Misc/hrp_weights.png", caption="Model Weights", use_column_width="auto")
     
-    fig, ax = plt.subplots(figsize=(8,8))
-    pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
-    plt.title('Model Weights')
-    plt.tight_layout()
-    st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.pyplot(fig)
+    #fig, ax = plt.subplots(figsize=(8,8))
+    #pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
+    #plt.title('Model Weights')
+    #plt.tight_layout()
+    #st.set_option('deprecation.showPyplotGlobalUse', False)
+    #st.pyplot(fig)
     
 
     st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
@@ -396,10 +399,10 @@ with tab2:
     
     
 with tab3:
-    md_filepath = "./Misc/stats.md"
-    with open (md_filepath, "r") as file:
-        md = file.read()
-    st.markdown(md, unsafe_allow_html=True)
+    st.header(f"Naive Portfolio", divider=True)
+    st.write("Naive Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
+    
+
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
 
