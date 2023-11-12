@@ -300,9 +300,11 @@ with tab1:
     
     #optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
-    
     path = os.path.join(os.getcwd(), 'stats.html')
-    st.button("Performance Report", on_click=open_html_file(path))   
+    if st.button("Portfolio Report", key="link button"):
+        st.link(path, target="_blank", key="html_link")
+
+
     #qs.reports.html(optimized_portfolio, benchmark=sp500, output='mv_report.html')
     HtmlFile = open("stats.html", 'r', encoding='utf-8')
     source_code = HtmlFile.read() 
