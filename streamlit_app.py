@@ -302,7 +302,6 @@ with tab1:
     st.subheader("Portfolio Performance")
     
     path = os.path.join(os.getcwd(), 'stats.html')
-    st.button("Performance Report", on_click=open_html_file(path))
     if st.button("Performance Report"):
         path = "file:///" + os.path.abspath('stats.html')
         open_html_file(path)    
