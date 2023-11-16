@@ -177,7 +177,7 @@ class MVP(BasePortfolio):
         portfolio.index = sp500.index
         print("Optimized Portfolio:")
         print(optimized_portfolio)
-
+        
         print("\nS&P 500 Benchmark:")
         print(sp500)
         qs.reports.html(optimized_portfolio , benchmark=sp500, output='mv_stats.html', periods_per_year=12)

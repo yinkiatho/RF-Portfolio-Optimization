@@ -231,7 +231,7 @@ with tab1:
     
     st.image("./Misc/mv_stats.png", caption="Mean Variance Portfolio Performance", use_column_width="auto")
 
-    
+        
     #results, best_model = mvp.generate_mv_models(start_month, start_year)
     
     # Plotting Graphs 2 columns

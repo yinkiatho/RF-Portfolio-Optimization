@@ -39,7 +39,7 @@ class BasePortfolio():
         return [v.strip('_predictions.csv') for v in os.listdir(self.PREDICTION_DIR)]
     
     def get_close_data_total(self, n):
-        return pd.read_csv(self.PROCESSED_DIR + 'close_data' + str(n) + 'year' + '.csv', 
+        return pd.read_csv(self.PROCESSED_DIR + 'close_data_' + str(n) + 'year' + '.csv', 
                                 index_col='Date', parse_dates=True)
         
     def get_returns_data_total(self):
