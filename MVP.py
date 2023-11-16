@@ -204,6 +204,66 @@ class MVP(BasePortfolio):
         self.results = dfs
         return dfs, curr_model
     
+    def generate_mv_models_two(self, start_month, start_year):
+    
+        curr_year, curr_month = start_year, start_month
+        dfs = {
+            "d": [],
+            "dfs": []
+        }
+        curr_max = 0
+        curr_model = None
+    
+        for d in range(1, 4):
+            df = {
+            'sharpes': [],
+            'expected_return': [],
+            'annual_volatility': [],
+            'num_stocks': [],
+            'weights':[]
+            }
+        #while not (curr_year > end_year or (curr_year == end_year and curr_month > end_month)):
+            for i in range(25, 275, 25):
+                tickers, pred_vector = self.get_top_n_tickers(curr_year, curr_month, i)
+                close_data = self.get_close_prices(curr_year, curr_month, d, tickers)
+                predicted_returns = self.generate_predicted_historical_returns(curr_year, curr_month, d, tickers)
+                #print(close_data)
+                #print(predicted_returns)
+                mu = predicted_returns.mean()
+                #mu = expected_returns.mean_historical_return(close_data)
+                #print(mu)
+                S = CovarianceShrinkage(close_data).ledoit_wolf()
+                #print(S)\
+                ef = EfficientFrontier(mu, S, weight_bounds=(0, 0.1))
+                ef.add_objective(objective_functions.L2_reg, gamma=0.1)
+                raw_weights = ef.max_sharpe()
+                cleaned_weights = ef.clean_weights()
+                #print(pd.Series(cleaned_weights).plot.pie(figsize=(10, 10)))
+                # ef.save_weights_to_file("weights.csv")  # saves to file
+                #print(cleaned_weights)
+                #print(raw_weights)
+                ef.portfolio_performance(verbose=False)
+
+                ex_return = ef.portfolio_performance()[0]
+                df['expected_return'].append(ex_return)
+                df['num_stocks'].append(i)
+                df['annual_volatility'].append(ef.portfolio_performance()[1])
+                df['sharpes'].append(ef.portfolio_performance()[2])
+                df['weights'].append(cleaned_weights)
+
+                if ef.portfolio_performance()[2] > curr_max:
+                    curr_max = ef.portfolio_performance()[2]
+                    curr_model = ef
+            #print(ef.portfolio_performance()[0]) # sharpe ratio
+            dfs["d"].append(d)
+            dfs['dfs'].append(df)
+        # Plot Graph
+        #plt.plot(df['num_stocks'], df['sharpes'])
+        #print(dfs)
+        self.best_model = curr_model
+        self.results = dfs
+        return dfs, curr_model
+    
     def print_summary(self):
         print(f"Performance of best portfolio: {self.best_model.portfolio_performance(verbose=True)}")
         print(f"Best Portfolio Weights: {self.best_modelbest_model.clean_weights()}")
