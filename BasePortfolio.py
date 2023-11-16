@@ -22,6 +22,7 @@ class BasePortfolio():
         # Meta Variables
         self.DATA_DIR = (os.getcwd() + "/data/")
         self.PREDICTION_DIR = (os.getcwd() + "/predictions_new/")
+        self.PROCESSED_DIR = (os.getcwd() + "/processed_data/")
         self.start_date = '2014-01-01'
         self.end_date = "2019-11-30"
         self.tickers = self.get_all_symbols()
@@ -36,6 +37,14 @@ class BasePortfolio():
 
     def get_current_predictions(self):
         return [v.strip('_predictions.csv') for v in os.listdir(self.PREDICTION_DIR)]
+    
+    def get_close_data_total(self, n):
+        return pd.read_csv(self.PROCESSED_DIR + 'close_data' + str(n) + 'year' + '.csv', 
+                                index_col='Date', parse_dates=True)
+        
+    def get_returns_data_total(self):
+        return pd.read_csv(self.PROCESSED_DIR + 'returns_data.csv', index_col='Date for next')
+    
     
     def read_sample_index(self):
         sample_index = pd.read_csv(self.DATA_DIR + 'AAPL.csv', index_col='Date', parse_dates=True)
@@ -118,6 +127,15 @@ class BasePortfolio():
             df[ticker] = data['Close']
             df.index = data.index
         return df
+    
+    def generate_past_close_data(self, tickers, month, year):
+        df = pd.DataFrame()
+    
+        data = self.get_close_data_total(3)
+        data = data[tickers]
+        mask = (data.index.month <= month) & (data.index.year <= year)
+        data = data.loc[mask]
+        return data
 
 
     def generate_all_close_data(self, tickers, start_year, start_month, end_year, end_month):
