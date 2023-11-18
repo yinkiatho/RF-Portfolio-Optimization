@@ -52,14 +52,15 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 # Side Bar
 st.sidebar.header("Model Configuration")
 
+
 with st.sidebar:
     # General Analysis 
     
     # Choose Number of Stocks
-    n = st.slider("Number of Stocks", 25, 250, 25)
+    n = st.slider("Number of Stocks", 25, 250, step=25)
     
     # Choose Prediction Window
-    d = st.slider("Number of Historical Years", 1, 3, 1)
+    d = st.slider("Number of Historical Years", 1, 3, step=1)
     
     
 
