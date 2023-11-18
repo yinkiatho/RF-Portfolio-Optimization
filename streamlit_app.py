@@ -258,11 +258,18 @@ with tab1:
     # Specify the path to your HTML file
     html_file_path = 'mv_stats.html'
     
+    webbrowser.open_new_tab(f'file://{os.getcwd()}/{html_file_path}')
+
+    
     # Create a button to open the HTML file in a new tab
     if st.button('Open Performnce Report'):
     # Use st.components.html to embed the HTML file
         with open(html_file_path, 'r', encoding='utf-8') as html_file:
             st.components.v1.html(html_file.read(), height=800)
+            
+            
+
+
     
     
 
