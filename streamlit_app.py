@@ -273,15 +273,9 @@ with tab1:
         except Exception as e:
             print('An exception occurred: ', e)
 
-    #with open(html_file_path, 'r', encoding='utf-8') as html_file:  
-    #    st.components.v1.html(html_file.read(), height=1000, scrolling=True)
+    with open(html_file_path, 'r', encoding='utf-8') as html_file:  
+        st.components.v1.html(html_file.read(), height=1000, scrolling=True)
             
-            
-
-
-    
-    
-
 
 with tab2:
     st.header(f"Hierarchical Risk Parity Optimized Portfolio with {n} Stocks and {d} Historical Years", divider=True)
