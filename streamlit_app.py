@@ -278,6 +278,7 @@ with tab1:
             
 
 with tab2:
+    '''
     st.header(f"Hierarchical Risk Parity Optimized Portfolio with {n} Stocks and {d} Historical Years", divider=True)
     hrp = HRP()
     with st.spinner("Generating Portfolio Performance..."):
@@ -327,7 +328,7 @@ with tab2:
     
     
     
-
+    '''
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
 
