@@ -30,9 +30,6 @@ def open_html_file(file_path):
     # Open the HTML file in the default web browser
     webbrowser.open(file_path)
     
-    
-    
-
 
 # Use default matplotlib font
 plt.rcParams['font.family'] = 'sans-serif'
@@ -42,6 +39,8 @@ st.set_page_config(
     page_title="Random Forest Stock Selection and Portfolio Optimisation",
     page_icon="🧊",
     layout="wide",
+    # Add theme to be light
+    initial_sidebar_state="expanded",
 )
 
 
@@ -219,6 +218,14 @@ with st.expander("Model Code"):
     print(f"Mean Absolute Error: {mean_absolute_error(y_actual, y_pred)}")"""
     
     st.code(code, language='python')
+
+st.subheader("Portfolio Performances", divider=True)
+st.write("Generated top ranked stock predictions for each month from 2014 to 2019 were used as input vectors for the portfolio, \
+        with the number of stocks in the portfolio ranging from 25 to 275. \
+        rebalanced and optimized monthly using Mean Variance Optimization and Hierarchical Risk Parity Method. \
+        ")
+
+st.image("./Misc/performance.png", caption="Mean Variance and Hierarchical Risk Parity Portfolio Performances", use_column_width="auto")
 
     
 tab1, tab2 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio"])

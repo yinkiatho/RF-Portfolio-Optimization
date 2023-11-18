@@ -21,7 +21,7 @@ from NaivePortfolio import NaivePorfolio
 import webbrowser
 
 
-
 mvp = MVP()
-mvp.generate_mv_models_two(50)
+mvp.generate_all_models()
+
     

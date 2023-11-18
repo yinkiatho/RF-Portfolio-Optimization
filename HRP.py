@@ -22,61 +22,108 @@ class HRP(BasePortfolio):
     def __init__(self) -> None:
         super().__init__()
         self.best_model = None
-        self.results = None
-        
-        
-    def generate_hrp_models(self, start_month, start_year):
+        self.results = None        
+        self.portfolio_weights = pd.DataFrame(columns=['Date', 'Ticker', 'Weight'])
+        self.performances = pd.DataFrame(columns=['Number Historical Years', 'Number of Stocks', 'Portfolio_Return', 'Portfolio_Volatility', 'Portfolio_Sharpe'])
 
-        curr_year, curr_month = start_year, start_month
-        dfs = {
-            "d": [],
-            "dfs": []
-        }
-        curr_max = 0
-        curr_model = None
-        for d in range(1, 4):
-            df = {
-                'sharpes': [],
-                'expected_return': [],
-                'annual_volatility': [],
-                'num_stocks': [],
-                'weights': []
-            }
-        # while not (curr_year > end_year or (curr_year == end_year and curr_month > end_month)):
-            for i in range(25, 275, 25):
-                tickers, pred_vector = super().get_top_n_tickers(curr_year, curr_month, i)
-                close_data = super().get_close_prices(curr_year, curr_month, d, tickers)
-                predicted_returns = super().generate_predicted_historical_returns(
-                    curr_year, curr_month, d, tickers)
-                rets = expected_returns.returns_from_prices(close_data)
-
-                hrp = hierarchical_portfolio.HRPOpt(rets)   
-                # hrp.add_objective(objective_functions.L2_reg, gamma=0.1)
-                raw_weights = hrp.optimize()
-                cleaned_weights = hrp.clean_weights()
-                hrp.portfolio_performance(verbose=False)
-
-                ex_return = hrp.portfolio_performance()[0]
-                df['expected_return'].append(ex_return)
-                df['num_stocks'].append(i)
-                df['annual_volatility'].append(hrp.portfolio_performance()[1])
-                df['sharpes'].append(hrp.portfolio_performance()[2])
-                df['weights'].append(cleaned_weights)
-
-                if hrp.portfolio_performance()[2] > curr_max:
-                    curr_max = hrp.portfolio_performance()[2]
-                    curr_model = hrp
-            # print(ef.portfolio_performance()[0]) # sharpe ratio
-            dfs["d"].append(d)
-            dfs['dfs'].append(df)
-
-        # Plot Graph
-        # plt.plot(df['num_stocks'], df['sharpes'])
-        # print(dfs)
-        self.best_model = curr_model
-        self.results = dfs
-        return dfs, curr_model
     
+    
+    def rebalance_portfolio(self, stock_tickers, current_date, d):
+        # Filter stock data based on input tickers and current date
+        #relevant_data = stock_data[stock_tickers]
+        #relevant_data = stock_data[(stock_data['Date'] <= current_date)]
+
+        # Calculate expected returns and covariances
+        #tickers, pred_vector = get_top_n_tickers(current_date.year, current_date.month, 25)
+        output = super().generate_past_close_data(stock_tickers, current_date.month, current_date.year, num_years=d)
+        mu = expected_returns.returns_from_prices(output)
+        hrp = hierarchical_portfolio.HRPOpt(mu)
+        raw_weights = hrp.optimize()
+        cleaned_weights = hrp.clean_weights()
+        #print(cleaned_weights)
+        # Optimize portfolio
+        #optimized_portfolio = objective.optimize(expected_returns, covariance_matrix)
+
+        # Rebalance portfolio based on optimized weights
+        for stock_index, stock_ticker in enumerate(stock_tickers):
+            # Add optimized weights to portfolio weights DataFrame
+            weight = cleaned_weights[stock_ticker]
+            new_row = pd.DataFrame({'Date': current_date, 'Ticker': stock_ticker, 'Weight': weight},  index=[0])
+            new_result = pd.concat([self.portfolio_weights, new_row], axis=0, ignore_index=True)
+            self.portfolio_weights = new_result
+            
+    
+    def generate_hrp_models_two(self, n, d, start_date='2014-01-01', end_date='2019-11-30'):
+        start_date = pd.to_datetime(start_date)
+        end_date = pd.to_datetime(end_date)
+        current_date = start_date
+        while current_date <= end_date:
+        # Get input vector of stock tickers for the current month
+            stock_tickers, pred_vector = super().get_top_n_tickers(current_date.year, current_date.month, n)
+            #print(stock_tickers)
+            # Rebalance portfolio using the input tickers
+            self.rebalance_portfolio(stock_tickers, current_date, d)
+            # Increment the date to the next month
+            current_date = current_date + pd.DateOffset(months=1)
+        print("Portfolio rebalanced successfully!")
+        
+        # Processing and generating report
+        wide_df = self.portfolio_weights.pivot(index='Date', columns='Ticker', values='Weight')
+        wide_df = wide_df.reset_index()
+        wide_df.fillna(0, inplace=True)
+        wide_df = wide_df.set_index('Date')
+        
+        # Getting returns
+        returns_data = super().get_returns_data_total()
+        stocks = list(wide_df.columns)
+        returns_data = returns_data[stocks]
+        
+        # Merging the dataframes together
+        wide_df.index = pd.to_datetime(wide_df.index)
+        returns_data.index = pd.to_datetime(returns_data.index)
+        merged_data = pd.concat([wide_df, returns_data], axis=1 ,keys=['Portfolio_Weights', 'Stock_Returns'])
+        merged_data.columns = [f'{col[0]}_{col[1]}' for col in merged_data.columns]
+        # Reset the index to have 'Date' as a regular column
+        merged_data = merged_data.reset_index()
+        merged_data = merged_data.rename(columns={'index': 'Date'})
+        merged_data = merged_data.set_index('Date')
+        for ticker in wide_df.columns:  # Exclude 'Date' column
+            merged_data[f'{ticker}_Weighted_Return'] = merged_data['Portfolio_Weights_' + ticker] * merged_data['Stock_Returns_' + ticker]
+    
+        merged_data['Portfolio_Return'] = merged_data.filter(like='_Weighted_Return').sum(axis=1)   
+        portfolio = merged_data[['Portfolio_Return']]
+        
+        
+        # Generating QuantStats
+        sp500 = pd.read_csv(DATA_DIR + 'GSPC.csv', index_col='Date', parse_dates=True)
+        mask = (sp500.index >= datetime(2013, 12, 1)) & (sp500.index <= datetime(2019, 11, 30))
+        sp500 = sp500.loc[mask]
+        sp500 = sp500['Close']
+        sp500 = sp500.resample('M').first().pct_change().dropna()  
+        optimized_portfolio = portfolio['Portfolio_Return']
+
+        portfolio.index = sp500.index
+        #print("Optimized Portfolio:")
+        #print(optimized_portfolio)
+        
+        #print("\nS&P 500 Benchmark:")
+        #print(sp500)
+        qs.reports.html(optimized_portfolio , benchmark=sp500, output='hrp_stats.html', periods_per_year=12)
+        
+        return qs.stats.sharpe(optimized_portfolio, periods=12), qs.stats.volatility(optimized_portfolio, periods=12), qs.stats.cagr(optimized_portfolio, periods=12)
+        
+    def generate_all_models(self, start_date='2014-01-01', end_date='2019-11-30'):
+        
+        for d in range(1, 4):
+            for n in range(25, 275, 25):
+                print("Generating HRP Model for d = " + str(d) + " and n = " + str(n))
+                sharpe, volatility, CAGR = self.generate_hrp_models_two(n, d, start_date, end_date)
+                new_row = pd.DataFrame({'Number Historical Years': d, 'Number of Stocks': n, 'Portfolio_Return': CAGR, 'Portfolio_Volatility': volatility, 'Portfolio_Sharpe': sharpe},  index=[0])
+                new_result = pd.concat([self.performances, new_row], axis=0, ignore_index=True)
+                self.performances = new_result
+                self.portfolio_weights = pd.DataFrame(columns=['Date', 'Ticker', 'Weight'])
+                
+        return self.performances    
     
     def print_summary(self):
         print(f"Performance of best portfolio: {self.best_model.portfolio_performance(verbose=True)}")

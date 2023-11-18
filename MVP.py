@@ -28,82 +28,22 @@ class MVP(BasePortfolio):
         self.PREDICTION_DIR = (os.getcwd() + "/predictions_new/")
         self.start_date = '2014-01-01'
         self.end_date = "2019-11-30"
-        self.tickers = self.get_all_symbols()
-        self.predicted_tickers = self.get_current_predictions()
-        self.sample_index = self.read_sample_index()
         self.best_model = None
         self.results = None
         self.portfolio_weights = pd.DataFrame(columns=['Date', 'Ticker', 'Weight'])
+        self.performances = pd.DataFrame(columns=['Number Historical Years', 'Number of Stocks', 'Portfolio_Return', 'Portfolio_Volatility', 'Portfolio_Sharpe'])
         
     
-    def generate_mv_models(self, start_month, start_year):
     
-        curr_year, curr_month = start_year, start_month
-        dfs = {
-            "d": [],
-            "dfs": []
-        }
-        curr_max = 0
-        curr_model = None
-    
-        for d in range(1, 4):
-            df = {
-            'sharpes': [],
-            'expected_return': [],
-            'annual_volatility': [],
-            'num_stocks': [],
-            'weights':[]
-            }
-        #while not (curr_year > end_year or (curr_year == end_year and curr_month > end_month)):
-            for i in range(25, 275, 25):
-                tickers, pred_vector = self.get_top_n_tickers(curr_year, curr_month, i)
-                close_data = self.get_close_prices(curr_year, curr_month, d, tickers)
-                predicted_returns = self.generate_predicted_historical_returns(curr_year, curr_month, d, tickers)
-                #print(close_data)
-                #print(predicted_returns)
-                mu = predicted_returns.mean()
-                #mu = expected_returns.mean_historical_return(close_data)
-                #print(mu)
-                S = CovarianceShrinkage(close_data).ledoit_wolf()
-                #print(S)\
-                ef = EfficientFrontier(mu, S, weight_bounds=(0, 0.1))
-                ef.add_objective(objective_functions.L2_reg, gamma=0.1)
-                raw_weights = ef.max_sharpe()
-                cleaned_weights = ef.clean_weights()
-                #print(pd.Series(cleaned_weights).plot.pie(figsize=(10, 10)))
-                # ef.save_weights_to_file("weights.csv")  # saves to file
-                #print(cleaned_weights)
-                #print(raw_weights)
-                ef.portfolio_performance(verbose=False)
-
-                ex_return = ef.portfolio_performance()[0]
-                df['expected_return'].append(ex_return)
-                df['num_stocks'].append(i)
-                df['annual_volatility'].append(ef.portfolio_performance()[1])
-                df['sharpes'].append(ef.portfolio_performance()[2])
-                df['weights'].append(cleaned_weights)
-
-                if ef.portfolio_performance()[2] > curr_max:
-                    curr_max = ef.portfolio_performance()[2]
-                    curr_model = ef
-            #print(ef.portfolio_performance()[0]) # sharpe ratio
-            dfs["d"].append(d)
-            dfs['dfs'].append(df)
-        # Plot Graph
-        #plt.plot(df['num_stocks'], df['sharpes'])
-        #print(dfs)
-        self.best_model = curr_model
-        self.results = dfs
-        return dfs, curr_model
-    
-    def rebalance_portfolio(self, stock_tickers, current_date):
+    def rebalance_portfolio(self, stock_tickers, current_date, d):
         # Filter stock data based on input tickers and current date
         #relevant_data = stock_data[stock_tickers]
         #relevant_data = stock_data[(stock_data['Date'] <= current_date)]
 
         # Calculate expected returns and covariances
         #tickers, pred_vector = get_top_n_tickers(current_date.year, current_date.month, 25)
-        output = super().generate_past_close_data(stock_tickers, current_date.month, current_date.year)
+        output = super().generate_past_close_data(stock_tickers, current_date.month, 
+                                                  current_date.year, num_years=d)
         mu = expected_returns.mean_historical_return(output)
         covariance_matrix = CovarianceShrinkage(output).ledoit_wolf()
 
@@ -125,7 +65,7 @@ class MVP(BasePortfolio):
             self.portfolio_weights = new_result
             
     
-    def generate_mv_models_two(self,n, start_date='2014-01-01', end_date='2019-11-30'):
+    def generate_mv_models_two(self, n, d, start_date='2014-01-01', end_date='2019-11-30'):
         start_date = pd.to_datetime(start_date)
         end_date = pd.to_datetime(end_date)
         current_date = start_date
@@ -134,7 +74,7 @@ class MVP(BasePortfolio):
             stock_tickers, pred_vector = super().get_top_n_tickers(current_date.year, current_date.month, n)
             #print(stock_tickers)
             # Rebalance portfolio using the input tickers
-            self.rebalance_portfolio(stock_tickers, current_date)
+            self.rebalance_portfolio(stock_tickers, current_date, d)
             # Increment the date to the next month
             current_date = current_date + pd.DateOffset(months=1)
         print("Portfolio rebalanced successfully!")
@@ -175,12 +115,28 @@ class MVP(BasePortfolio):
         optimized_portfolio = portfolio['Portfolio_Return']
 
         portfolio.index = sp500.index
-        print("Optimized Portfolio:")
-        print(optimized_portfolio)
+        #print("Optimized Portfolio:")
+        #print(optimized_portfolio)
         
-        print("\nS&P 500 Benchmark:")
-        print(sp500)
+        #print("\nS&P 500 Benchmark:")
+        #print(sp500)
+        qs.extend_pandas()
         qs.reports.html(optimized_portfolio , benchmark=sp500, output='mv_stats.html', periods_per_year=12)
+        return qs.stats.sharpe(optimized_portfolio, periods=12), qs.stats.volatility(optimized_portfolio, periods=12), qs.stats.cagr(optimized_portfolio, periods=12)
+        
+        
+    def generate_all_models(self, start_date='2014-01-01', end_date='2019-11-30'):
+        
+        for d in range(1, 4):
+            for n in range(25, 275, 25):
+                print("Generating MVP Model for d = " + str(d) + " and n = " + str(n))
+                sharpe, volatility, CAGR = self.generate_mv_models_two(n, d, start_date, end_date)
+                new_row = pd.DataFrame({'Number Historical Years': d, 'Number of Stocks': n, 'Portfolio_Return': CAGR, 'Portfolio_Volatility': volatility, 'Portfolio_Sharpe': sharpe},  index=[0])
+                new_result = pd.concat([self.performances, new_row], axis=0, ignore_index=True)
+                self.performances = new_result
+                self.portfolio_weights = pd.DataFrame(columns=['Date', 'Ticker', 'Weight'])
+                
+        return self.performances
         
     
         

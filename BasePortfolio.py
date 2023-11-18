@@ -128,10 +128,10 @@ class BasePortfolio():
             df.index = data.index
         return df
     
-    def generate_past_close_data(self, tickers, month, year):
+    def generate_past_close_data(self, tickers, month, year, num_years=3):
         df = pd.DataFrame()
     
-        data = self.get_close_data_total(3)
+        data = self.get_close_data_total(num_years)
         data = data[tickers]
         mask = (data.index.month <= month) & (data.index.year <= year)
         data = data.loc[mask]
