@@ -228,7 +228,8 @@ tab1, tab2 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio"])
 with tab1:
     st.header(f"Mean Variance Optimized Portfolio with {n} Stocks and {d} Historical Years", divider=True)
     mvp = MVP()
-    sharpe, volatility, cagr = mvp.generate_mv_models_two(n, d)
+    with st.spinner("Generating Portfolio Performance..."):
+        sharpe, volatility, cagr = mvp.generate_mv_models_two(n, d)
    
     kpi1, kpi2, kpi3 = st.columns(3)
 
