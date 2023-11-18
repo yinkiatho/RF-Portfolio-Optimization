@@ -263,10 +263,9 @@ with tab1:
 
     
     # Create a button to open the HTML file in a new tab
-    if st.button('Open Performnce Report'):
-    # Use st.components.html to embed the HTML file
-        with open(html_file_path, 'r', encoding='utf-8') as html_file:
-            st.components.v1.html(html_file.read(), height=800)
+
+    with open(html_file_path, 'r', encoding='utf-8') as html_file:
+        st.components.v1.html(html_file.read(), height=1000, scrolling=True, width=1000)
             
             
 
