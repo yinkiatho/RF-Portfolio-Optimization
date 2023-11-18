@@ -224,8 +224,8 @@ st.write("Generated top ranked stock predictions for each month from 2014 to 201
 st.image("./Misc/performance.png", caption="Mean Variance and Hierarchical Risk Parity Portfolio Performances", use_column_width="auto")
 
     
-tab1, tab2 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio"])
-
+#tab1, tab2 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio"])
+tab1, tab2 = st.columns(2)
 with tab1:
     st.header(f"Mean Variance Optimized Portfolio with {n} Stocks and {d} Historical Years", divider=True)
     mvp = MVP()
@@ -278,7 +278,7 @@ with tab1:
             
 
 with tab2:
-    '''
+    
     st.header(f"Hierarchical Risk Parity Optimized Portfolio with {n} Stocks and {d} Historical Years", divider=True)
     hrp = HRP()
     with st.spinner("Generating Portfolio Performance..."):
@@ -328,7 +328,7 @@ with tab2:
     
     
     
-    '''
+    
     # Calculate profits or any other relevant metrics here
     # You can add more sections to display additional charts and tables
 
