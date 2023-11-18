@@ -224,8 +224,8 @@ st.write("Generated top ranked stock predictions for each month from 2014 to 201
 st.image("./Misc/performance.png", caption="Mean Variance and Hierarchical Risk Parity Portfolio Performances", use_column_width="auto")
 
     
-#tab1, tab2 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio"])
-tab1, tab2 = st.columns(2)
+tab1, tab2 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio"])
+#tab1, tab2 = st.columns(2)
 with tab1:
     st.header(f"Mean Variance Optimized Portfolio with {n} Stocks and {d} Historical Years", divider=True)
     mvp = MVP()
@@ -324,7 +324,9 @@ with tab2:
             subprocess.call(['open', absolute_file_path])
         except Exception as e:
             print('An exception occurred: ', e)
-
+            
+    with open(html_file_path, 'r', encoding='utf-8') as html_file:  
+        st.components.v1.html(html_file.read(), height=1000, scrolling=True)
     
     
     
