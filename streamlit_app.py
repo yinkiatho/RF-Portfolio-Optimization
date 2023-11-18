@@ -2,7 +2,6 @@ import streamlit.components.v1 as components
 from jinja2 import Template
 from datetime import datetime
 import os
-im
 import streamlit as st
 import pandas_ta as ta
 import pandas as pd
