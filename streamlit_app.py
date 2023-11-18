@@ -2,6 +2,7 @@ import streamlit.components.v1 as components
 from jinja2 import Template
 from datetime import datetime
 import os
+im
 import streamlit as st
 import pandas_ta as ta
 import pandas as pd
@@ -53,12 +54,6 @@ st.sidebar.header("Model Configuration")
 
 with st.sidebar:
     # General Analysis 
-    
-    # Choose Date
-    start_date = st.date_input("Choose Prediction Date", min_value=datetime(2014, 1, 1), 
-                               max_value=datetime(2019, 11, 30), 
-                               value=datetime(2014, 1, 1))
-    start_month, start_year = start_date.month, start_date.year
     
     # Choose Number of Stocks
     n = st.slider("Number of Stocks", 25, 275, 25)
@@ -219,6 +214,7 @@ with st.expander("Model Code"):
     
     st.code(code, language='python')
 
+
 st.subheader("Portfolio Performances", divider=True)
 st.write("Generated top ranked stock predictions for each month from 2014 to 2019 were used as input vectors for the portfolio, \
         with the number of stocks in the portfolio ranging from 25 to 275. \
@@ -231,93 +227,44 @@ st.image("./Misc/performance.png", caption="Mean Variance and Hierarchical Risk 
 tab1, tab2 = st.tabs(["Mean Variance Portfolio", "HRP Portfolio"])
 
 with tab1:
-    st.header(f"Mean Variance Optimized Portfolio with {n} Stocks", divider=True)
-    st.write("Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
-    
+    st.header(f"Mean Variance Optimized Portfolio with {n} Stocks and {d} Historical Years", divider=True)
     mvp = MVP()
-    
-    st.image("./Misc/mv_stats.png", caption="Mean Variance Portfolio Performance", use_column_width="auto")
-
-        
-    #results, best_model = mvp.generate_mv_models(start_month, start_year)
-    
-    # Plotting Graphs 2 columns
-    #col1, col2 = st.columns(2)
-    #with col1:	
-    #    d = [1, 2, 3]
-    #    for i, result in enumerate(results['dfs']):
-    #    #print(i, result)
-    #        plt.plot(result['num_stocks'], result['sharpes'])
-    #    plt.xlabel('Number of Stocks')
-    #    plt.ylabel('Sharpe Ratio')
-    #        #plt.legend(['d = ' + str(d[i])])
-    #    plt.title('MV: Sharpe Ratio vs Number of Stocks')
-    #    plt.legend(['d = 1', 'd = 2', 'd = 3'])
-    #    st.pyplot()
-        
-    #with col2:
-    #    for i, result in enumerate(results['dfs']):
-    #    #print(i, result)
-    #        plt.plot(result['num_stocks'], result['expected_return'])
-    #    plt.xlabel('Number of Stocks')
-    #    plt.ylabel('Expected Return')
-    #    # plt.legend(['d = ' + str(d[i])])
-    #    plt.title('MV: Expected Return vs Number of Stocks')
-    #    plt.legend(['d = 1', 'd = 2', 'd = 3'])
-    #   st.pyplot()
-
-
-    #expected_ar, annual_volatility, sharpe = best_model.portfolio_performance(verbose=True)
+    sharpe, volatility, cagr = mvp.generate_mv_models_two(n, d)
    
     kpi1, kpi2, kpi3 = st.columns(3)
 
         # fill in those three columns with respective metrics or KPIs
     kpi1.metric(
-            label="Expected Annual Return %",
-            value=15.41,
+            label="Compound Annual Growth Rate %",
+            value=round(cagr*100, 2),
         )
 
     kpi2.metric(
             label="Annual Volatility %",
-            value=12.42,
+            value=round(volatility*100, 2)
             # delta=-10 + count_married,
         )
 
     kpi3.metric(
             label="Sharpe Ratio",
-            value=1.08,
+            value=round(sharpe, 2)
         )
 
 
     style_metric_cards()
     st.write("")
-    st.subheader("Portfolio Weights")
-
-    # Plot the pie chart   
-    st.image("./Misc/mv_weights.png", caption="Model Weights", use_column_width="auto")
     
-    #fig, ax = plt.subplots(figsize=(8,8))
-    #pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
-    #plt.title('Model Weights')
-    #plt.tight_layout()
-    #st.set_option('deprecation.showPyplotGlobalUse', False)
-    #st.pyplot(fig)
-    
-
-    st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
-    
-    #optimized_portfolio, sp500 = mvp.get_quantstats()
     st.subheader("Portfolio Performance")
+    # Display HTML Results mv_stats.html
+    # Specify the path to your HTML file
+    html_file_path = 'mv_stats.html'
     
-    pdf_file_path = "./Misc/stats.pdf"
-    # get pdf file
-    with open(pdf_file_path, "rb") as file:
-        bytes_data = file.read()
-        base64_pdf = base64.b64encode(bytes_data).decode('utf-8')
-        pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="1000" type="application/pdf"></iframe>'
-
+    # Create a button to open the HTML file in a new tab
+    if st.button('Open Performnce Report'):
+    # Use st.components.html to embed the HTML file
+        with open(html_file_path, 'r', encoding='utf-8') as html_file:
+            st.components.v1.html(html_file.read(), height=800)
     
-    st.markdown(pdf_display, unsafe_allow_html=True)
     
 
 
