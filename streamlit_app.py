@@ -5,6 +5,7 @@ import os
 import streamlit as st
 import pandas_ta as ta
 import pandas as pd
+import subprocess
 # import pandas_profiling
 import quantstats as qs
 import numpy as np
@@ -55,7 +56,7 @@ with st.sidebar:
     # General Analysis 
     
     # Choose Number of Stocks
-    n = st.slider("Number of Stocks", 25, 275, 25)
+    n = st.slider("Number of Stocks", 25, 250, 25)
     
     # Choose Prediction Window
     d = st.slider("Number of Historical Years", 1, 3, 1)
@@ -258,14 +259,22 @@ with tab1:
     # Display HTML Results mv_stats.html
     # Specify the path to your HTML file
     html_file_path = 'mv_stats.html'
-    
-    webbrowser.open_new_tab(f'file://{os.getcwd()}/{html_file_path}')
-
-    
     # Create a button to open the HTML file in a new tab
+    
+    absolute_file_path = f'{os.path.realpath(html_file_path)}'
 
-    with open(html_file_path, 'r', encoding='utf-8') as html_file:
-        st.components.v1.html(html_file.read(), height=1000, scrolling=True, width=1000)
+    try:
+    # opens file in browser on Windows
+        os.startfile(absolute_file_path)
+    except AttributeError:
+        try:
+        # opens file in browser on macOS and Linux
+            subprocess.call(['open', absolute_file_path])
+        except Exception as e:
+            print('An exception occurred: ', e)
+
+    with open(html_file_path, 'r', encoding='utf-8') as html_file:  
+        st.components.v1.html(html_file.read(), height=1000, scrolling=True)
             
             
 
