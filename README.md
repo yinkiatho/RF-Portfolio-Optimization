@@ -4,6 +4,8 @@
 
 This project utilizes ensemble machine learning models, specifically Random Forest and Multi-layer Perceptron regressors, stacked together with a Gradient Boosting regressor, to predict stock returns. The aim is to capture non-linear relationships between stock features and returns. The project includes the selection of top-performing stocks for portfolio optimization using Mean Variance Optimization and Hierarchical Risk Parity methods.
 
+Each month, top ranked stocks based on next month expected monthly returns are generated, used as vector inputs for the portfolio, optimized using Mean Variance Optimization and Hierarchical Risk Parity from 2014 to 2019. 
+
 ## Model Configuration
 
 ### General Analysis
@@ -40,7 +42,6 @@ The ensemble machine learning model is built with Random Forest Regressor and Mu
 
 ![Stacking Model Architecture](./Misc/model.drawio.png)
 
-## Model Code
 
-```python
-# Insert your model code here
+## Performance Results
+![Mean Variance and Hierarchical Risk Parity Portfolio Performances](./Misc/performance.png)
