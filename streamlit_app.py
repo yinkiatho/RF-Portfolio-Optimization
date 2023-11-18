@@ -284,87 +284,52 @@ with tab1:
 
 
 with tab2:
-    st.header(f"Hierarchical Risk Parity Optimized Portfolio", divider=True)
-    st.write("HRP Portfolio Performance across n = range(25, 275, 25), with d = [1, 2, 3] years of historical data")
-    
+    st.header(f"Hierarchical Risk Parity Optimized Portfolio with {n} Stocks and {d} Historical Years", divider=True)
     hrp = HRP()
-    
-    st.image("./Misc/hrp_stats.png", caption="Hierarchical Risk Parity Portfolio Performance", use_column_width="auto")
-
-    
-    #results, best_model = hrp.generate_hrp_models(start_month, start_year)
-    
-    # Plotting Graphs 2 columns
-    #col1, col2 = st.columns(2)
-    #with col1:	
-    #    d = [1, 2, 3]
-    #    for i, result in enumerate(results['dfs']):
-    #    #print(i, result)
-    #        plt.plot(result['num_stocks'], result['sharpes'])
-    #    plt.xlabel('Number of Stocks')
-    #    plt.ylabel('Sharpe Ratio')
-    #        #plt.legend(['d = ' + str(d[i])])
-    #    plt.title('HRP: Sharpe Ratio vs Number of Stocks')
-    #    plt.legend(['d = 1', 'd = 2', 'd = 3'])
-    #    st.pyplot()
-        
-    #with col2:
-    #    for i, result in enumerate(results['dfs']):
-    #    #print(i, result)
-    #        plt.plot(result['num_stocks'], result['expected_return'])
-    #    plt.xlabel('Number of Stocks')
-    #    plt.ylabel('Expected Return')
-    #    # plt.legend(['d = ' + str(d[i])])
-    #    plt.title('HRP: Expected Return vs Number of Stocks')
-    #    plt.legend(['d = 1', 'd = 2', 'd = 3'])
-    #    st.pyplot()
-
-
-    #expected_ar, annual_volatility, sharpe = best_model.portfolio_performance(verbose=True)
+    with st.spinner("Generating Portfolio Performance..."):
+        sharpe, volatility, cagr = hrp.generate_hrp_models_two(n, d)
    
     kpi1, kpi2, kpi3 = st.columns(3)
 
         # fill in those three columns with respective metrics or KPIs
     kpi1.metric(
-            label="Expected Annual Return %",
-            #value=round(expected_ar*100, 2),
-            value = 33.2
+            label="Compound Annual Growth Rate %",
+            value=round(cagr*100, 2),
         )
 
     kpi2.metric(
             label="Annual Volatility %",
-            #value=round(annual_volatility*100, 2)
-            value = 11.88
+            value=round(volatility*100, 2)
             # delta=-10 + count_married,
         )
 
     kpi3.metric(
             label="Sharpe Ratio",
-            #value=round(sharpe, 2)
-            value = 2.62
+            value=round(sharpe, 2)
         )
 
 
     style_metric_cards()
     st.write("")
-    st.subheader("Portfolio Weights")
-
-    # Plot the pie chart   
-    st.image("./Misc/hrp_weights.png", caption="Model Weights", use_column_width="auto")
-    
-    #fig, ax = plt.subplots(figsize=(8,8))
-    #pd.Series(best_model.clean_weights()).plot.pie(ax=ax)
-    #plt.title('Model Weights')
-    #plt.tight_layout()
-    #st.set_option('deprecation.showPyplotGlobalUse', False)
-    #st.pyplot(fig)
-    
-
-    st.write("Using the optimized weights, we use the weights to construct a new portfolio and evaluate its performance against the S&P 500 Index.")
-    
-    #optimized_portfolio, sp500 = mvp.get_quantstats()
     
     st.subheader("Portfolio Performance")
+    # Display HTML Results mv_stats.html
+    # Specify the path to your HTML file
+    html_file_path = 'hrp_stats.html'
+    # Create a button to open the HTML file in a new tab
+    
+    absolute_file_path = f'{os.path.realpath(html_file_path)}'
+
+    try:
+    # opens file in browser on Windows
+        os.startfile(absolute_file_path)
+    except AttributeError:
+        try:
+        # opens file in browser on macOS and Linux
+            subprocess.call(['open', absolute_file_path])
+        except Exception as e:
+            print('An exception occurred: ', e)
+
     
     
     
