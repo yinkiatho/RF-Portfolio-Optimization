@@ -18,7 +18,6 @@ from streamlit_extras.metric_cards import style_metric_cards
 import matplotlib.pyplot as plt
 from MVP import MVP
 from HRP import HRP
-from NaivePortfolio import NaivePorfolio
 import webbrowser
 # Parameters
 start_month, start_year = None, None
